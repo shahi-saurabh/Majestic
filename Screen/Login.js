@@ -15,13 +15,24 @@ import axios from "axios";
 import { Checkbox } from "react-native-paper";
 import OutlineInput from "react-native-outline-input";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import Loader from "../utils/Loader";
+import Home from "./Home";
+
 //import Loader from "../utils/Loader";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checked3, setChecked3] = React.useState(false);
-  //const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [hidePass, setHidePass] = useState(true);
+
+ 
+  
+
+
+
 
   function login(userEmail, userPassword) {
     //var params = new FormData();
@@ -42,58 +53,51 @@ const Login = ({ navigation }) => {
           )
         : null;
     } else {
-      //params.append("email", "segwik-admin-1@majesticawning.com");
-      //params.append("password", "segwik-admin-pass-1");
-    }
-    let body = {
-      email: email,
-      password: password
-    };
-    const url = "http://api.segwik-development.com/api/v2/staffLogin";
+      const params = new FormData();
+      params.append("email", "rahul29tech@gmail.com");
+      params.append("password", "iSy4lEwJ");
+      setLoading(true);
 
-    axios
-      .post(url, body, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        }
-      })
-      .then(response => {
-        console.log("json login data", JSON.stringify(response));
-        if (response.data.response === true) {
-          Platform.OS === "android"
-            ? ToastAndroid.showWithGravity(
-                "Login Success",
-                ToastAndroid.SHORT,
-                ToastAndroid.BOTTOM
-              )
-            : null;
-        } else {
-          Platform.OS === "android"
-            ? ToastAndroid.showWithGravity(
-                "Login Failed",
-                ToastAndroid.SHORT,
-                ToastAndroid.BOTTOM
-              )
-            : null;
-        }
-      })
-      .catch(error => {
-        console.log("Error in login api -> ", error);
-      })
-      //.finally(() => setLoading(false))
+      const url = "http://api.segwik-development.com/api/v2/staffLogin";
+
+      setTimeout(() => {
+        fetch(url, {
+          method: "POST",
+          body: params,
+          redirect: "follow"
+        })
+          .then(response => response.json())
+          .then(result => {
+            console.log("APi respponse -> ", JSON.stringify(result));
+            //navigation.navigate("Drawer");
+            // AsyncStorage.setItem("user_ID", email);
+             AsyncStorage.setItem("user_id", JSON.stringify(result.data.user_id));
+          AsyncStorage.setItem("user_fname", result.data.user_fname);
+          AsyncStorage.setItem("user_lname", result.data.user_lname);
+          AsyncStorage.setItem("email", result.data.email);
+          AsyncStorage.setItem("token", result.data.token);  
+           console.log("response token data",result.data.token);
+             navigation.navigate("Home");
+            //run karo
+          })
+          .catch(error => {
+            console.log("APi errro -> ", JSON.stringify(error));
+          })
+        .finally(() => setLoading(false))
       .finally(() => {
         setTimeout(() => {
-          // setLoading.bind(undefined, false);
+          setLoading.bind(undefined, false);
         }, 2000);
       });
+      }, 1000);
+    }
   }
 
   return (
     <View
-      style={{ backgroundColor: "#0000ff", flex: 1, justifyContent: "center" }}
+      style={{ backgroundColor: "#0000ff", flex: 1, justifyContent: "center", }}
     >
-      {/* <Loader loading={loading} /> */}
+       <Loader loading={loading} /> 
 
       <ScrollView>
         <Image
@@ -127,7 +131,6 @@ const Login = ({ navigation }) => {
           }}
         >
           <View>
-            <Text style={{ color: "gray", fontsize: 18 }}>Email</Text>
             {/*  <View style={{
               flexDirection:"row"
           }}>
@@ -160,7 +163,7 @@ const Login = ({ navigation }) => {
             />
           </View> */}
 
-            <View style={styles.outline_editText}>
+            <View style={styles.outline_editText1}>
               <OutlineInput
                 value={email}
                 onChangeText={e => {
@@ -175,11 +178,15 @@ const Login = ({ navigation }) => {
                 passiveValueColor="#252c4a"
               />
             </View>
-            <View style={styles.outline_editText}>
-              <OutlineInput
+
+            <Text style={{ color: "gray", fontsize: 18 }}>Password</Text>
+
+            <View style={styles.outline_editText2}>
+              {/* <OutlineInput
                 value={password}
                 onChangeText={e => {
                   setPassword(e);
+                  
                 }}
                 label="Password"
                 activeValueColor="#252c4a"
@@ -188,6 +195,27 @@ const Login = ({ navigation }) => {
                 passiveBorderColor="#DDD"
                 passiveLabelColor="#252c4a"
                 passiveValueColor="#252c4a"
+              /> */}
+              <TextInput
+                style={styles.outline_editText}
+                placeholder="Password"
+                onChangeText={e => {
+                  setPassword(e);
+                }}
+                value={password}
+                autoCompleteType="password"
+                secureTextEntry={hidePass ? true : false}
+              />
+              <Icon
+                name={hidePass ? "eye-slash" : "eye"}
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "10%"
+                }}
+                size={15}
+                color="grey"
+                onPress={() => setHidePass(!hidePass)}
               />
             </View>
 
@@ -202,13 +230,12 @@ const Login = ({ navigation }) => {
                   setChecked3(!checked3);
                   setTimeout(() => {
                     if (checked3) {
-                      AsyncStorage.setItem("usre_ID", email);
-                      AsyncStorage.setItem("pass", password);
+                      AsyncStorage.setItem("user_ID", email);
+                      AsyncStorage.setItem("password", password);
                     } else {
-                      AsyncStorage.removeItem("usre_ID");
+                      AsyncStorage.removeItem("user_iD");
 
-                      AsyncStorage.removeItem("pass");
-                
+                      AsyncStorage.removeItem("password");
                     }
                   }, 1000);
                 }}
@@ -247,14 +274,13 @@ const Login = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-
         <Text
           style={{
             justifyContent: "center",
             alignItems: "center",
             fontSize: 24,
             marginLeft: "30%",
-            color: "#fff",
+            //color: "#000",
             marginTop: "45%"
           }}
         >
@@ -334,7 +360,20 @@ const styles = StyleSheet.create({
   },
 
   outline_editText: {
+    margin: 10,
+    height: 40,
+    width: "85%",
+    borderColor: "black",
+    borderWidth: 1,
+    marginBottom: 20,
+    borderRadius: 5
+  },
+  outline_editText1: {
     margin: 10
+  },
+  outline_editText2: {
+    margin: 10,
+    flexDirection: "row"
   },
   cart: {
     flex: 1,

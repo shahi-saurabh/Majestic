@@ -4,6 +4,7 @@ import Home from "../screens/Home";
 import Settings from "../screens/Settings";
 import Main from "../screens/Main";
 import QuotesDetails from "../screens/QuotesDetails";
+import Meeting from "../screens/Meeting";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,12 @@ const Router = () => {
       <Stack.Screen
         name="Main"
         component={Main}
+        options={{ headerShown: false }}
+      />
+
+       <Stack.Screen
+        name="Meeting"
+        component={Meeting}
         options={{ headerShown: false }}
       />
 

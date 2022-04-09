@@ -5,6 +5,10 @@ import Main from "./src/screens/Main";
 import Login from "./src/screens/Login";
 import ForgotPassword from "./src/screens/ForgotPassword"
 import Home from "./src/screens/Home"
+import  {LogBox} from 'react-native'
+import { Provider } from 'react-redux';
+import Store from './src/Redux/Store'
+LogBox.ignoreAllLogs()
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +37,7 @@ const Auth = () => {
 
 export default function App() {
   return (
+    //  <Provider store={Store}>
     <NavigationContainer>
       <Stack.Navigator>
       <Stack.Screen name="Auth" component={Auth}
@@ -52,5 +57,6 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    //  </Provider>
   );
 }

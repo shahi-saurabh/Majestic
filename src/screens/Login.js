@@ -20,8 +20,12 @@ import Home from "./Home";
 import ForgotPassword from "./ForgotPassword";
 import { Dimens } from "../utils/Dimension";
 import Loader from "../utils/Loader";
+//import CardView from 'react-native-cardview';
+// import { gloableData } from "../Redux/Action";
+// import { useDispatch } from 'react-redux';
 
 const Login = ({ navigation }) => {
+  // const dispatch=useDispatch()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [checked3, setChecked3] = React.useState(false);
@@ -29,6 +33,7 @@ const Login = ({ navigation }) => {
   const [hidePass, setHidePass] = useState(true);
   //const [invalidemail, setInvalidEmail] = useState(true);
   const [errortext, setErrortext] = useState(false)
+
 
   function login(userEmail, userPassword) {
     //var params = new FormData();
@@ -52,8 +57,8 @@ const Login = ({ navigation }) => {
         : null;
     } else {
       const params = new FormData();
-      params.append("email", userEmail);
-      params.append("password", "iSy4lEwJ");
+      params.append("email","rahul29tech@gmail.com");//userEmail //"rahul29tech@gmail.com"
+      params.append("password","iSy4lEwJ"); //userPassword  //"iSy4lEwJ"
       setLoading(true);
 
       const url = "http://api.segwik-development.com/api/v2/staffLogin";
@@ -77,6 +82,7 @@ const Login = ({ navigation }) => {
             AsyncStorage.setItem("user_lname", result.data.user_lname);
             AsyncStorage.setItem("email", result.data.email);
             AsyncStorage.setItem("token", result.data.token);
+            AsyncStorage.setItem("encrypted_customer_id",result.data.encrypted_customer_id);
             console.log("response token data", result.data.token);
             navigation.navigate("Drawer");
             //run karo
@@ -97,16 +103,14 @@ const Login = ({ navigation }) => {
 
   return (
     <View
-      style={{ backgroundColor: "#0760bd", flex: 1,}}
+      style={{ backgroundColor: "#31679B", flex: 1,}}
     >
       <Loader loading={loading} />
 
       
         <Image
-          source={{
-            uri:
-              "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2m70XvXrD7ul53OLgkffMayDv4eGDdqi3RC9gBsCHpwBVFCkNHSPywNG_E8KdAZnIBLo&usqp=CAU"
-          }}
+        source={require("../../assets/Logo.png")}//D:\DrawerNavi\assets\Logo.png
+           //source={require("../assets/Logo.png")}
           style={styles.image}
         />
 
@@ -115,7 +119,7 @@ const Login = ({ navigation }) => {
             justifyContent: "center",
             alignItems: "center",
             fontSize: 24,
-            marginLeft: "30%",
+            alignSelf: "center",
             color: "#fff"
           }}
         >
@@ -125,7 +129,7 @@ const Login = ({ navigation }) => {
         <View
           style={{
             // height: "78%",
-            width: "80%",
+            width: "60%",
             borderRadius: 10, padding: 5, elevation:10,
             backgroundColor: "#ffffffff",
             // flex: 1,
@@ -168,21 +172,28 @@ const Login = ({ navigation }) => {
           />
         </View> */}
 
-            <Text style={{ color: "gray", fontSize: 16,marginStart:5,marginTop:5}}>
-              Email Id
+            <Text style={{ color: "gray", fontSize: 16,marginStart:"15%",marginTop:5}}>
+              Login Email
             </Text>
-
-<View style={{ height:50,width: "95%", borderColor: 'black', borderWidth:1,flexDirection:"row" ,borderRadius:10, marginTop:10}} >
+         {/*    <CardView
+                //style={styles.cardStyle}
+                cardElevation={2}
+                cardMaxElevation={2}
+                cornerRadius={5}
+              > */}
+<View style={{ height:50,marginStart:"15%",width: "90%", borderColor: "black",borderWidth:1,flexDirection:"row" ,borderRadius:10, marginTop:10,
+    }} >
   <>
 <Image
-                source={{
+                /* source={{
                   uri:
                     "data:image/png;base64,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"
-                }}
+                }} */
+                source={require("../../assets/icons8-mail.png")}
                 style={{ width: 15, height: 15,alignSelf:'center',marginStart:10}}
               />
                <TextInput
-                style={{width:"90%", alignSelf:'center', marginStart:10}}
+                style={{width:"90%", alignSelf:'center', marginStart:10,textcolor:'gray'}}
                 placeholder="Email Id"
                 onChangeText={e => {
                   setEmail(e);
@@ -191,7 +202,7 @@ const Login = ({ navigation }) => {
                 value={email}
               /></>
             </View>
-
+{/* </CardView> */}
 
            {/*  <View style={styles.outline_editText1}>
               <Image
@@ -237,17 +248,18 @@ const Login = ({ navigation }) => {
             fontSize: 14,}}>Email must be valid</Text>
           ) :null}
 
-            <Text style={{ color: "gray", fontSize: 16 ,marginStart:5,marginTop:5 }}>
+            <Text style={{ color: "gray", fontSize: 16 ,marginStart:"15%",marginTop:5 }}>
               Password
             </Text>
-            <View style={{ height:50,width: "95%", borderColor: 'black', borderWidth:1,flexDirection:"row" ,borderRadius:10, marginTop:10}} >
+            <View style={{ height:50,width: "95%", marginStart:"15%",borderColor: 'black', borderWidth:1,flexDirection:"row" ,borderRadius:10, marginTop:10}} >
   <>
 <Image
-                source={{
+               /*  source={{
                   uri:
                     "data:image/png;base64,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"
-                }}
-                style={{ width: 15, height: 15,alignSelf:'center',marginStart:10}}
+                }} */
+                source={require("../../assets/icons8-unlock.png")}
+                style={{ width: 15, height: 15,alignSelf:'center',marginLeft:5 }}
               />
                <TextInput
                                 style={{width:"90%", alignSelf:'center', marginStart:10}}
@@ -323,7 +335,7 @@ const Login = ({ navigation }) => {
  
             <View
               style={{
-                flexDirection: "row"
+                flexDirection: "row",marginLeft:30
               }}
             >
               <Checkbox
@@ -352,13 +364,14 @@ const Login = ({ navigation }) => {
                   navigation.navigate("ForgotPassword");
                 }}
               >
-                <Text style={styles.forgot}>Forgot Password?</Text>
+                <Text style={styles.forgot1}>Forgot Password?</Text>
               </TouchableOpacity>
             </View>
 
             <TouchableOpacity
               style={styles.btnLogin}
               activeOpacity={0.9}
+
               onPress={() => {
                 login(email, password);
               }}
@@ -367,7 +380,8 @@ const Login = ({ navigation }) => {
                 style={{
                   fontSize: 18,
                   fontWeight: "bold",
-                  
+                  color:"#fff",
+                  alignItems:"center",margin:5                  
                 }}
               >
                 Login
@@ -383,10 +397,10 @@ const Login = ({ navigation }) => {
           style={{
             alignSelf: "center",
             fontSize: 16,
-            color:"#ffff"
+            color:"#ffff",
             
             //color: "#000",
-            //marginTop: "45%"
+            marginTop: "5%"
           }}
         >
           Privacy Policy!
@@ -406,11 +420,13 @@ const styles = StyleSheet.create({
   },
   btnLogin: {
     margin: 10,
+    height:40,
     width: "auto",
     backgroundColor: "orange",
-    
+    borderRadius:5,
     alignItems: "center",
-    
+    marginLeft: "15%",
+    marginRight: "15%"     
   },
   btnSignUp: {
     height: 48,
@@ -436,11 +452,12 @@ const styles = StyleSheet.create({
   },
   image: {
     height: "20%",
-    width: "50%",
+    width: "60%",
     alignSelf: "center",
     padding: 15,
     justifyContent: "center",
-    marginTop: "25%"
+    marginLeft: "15%",
+    marginTop: "15%",marginRight: "15%",
   },
   editText: {
     borderBottomColor: "grey",
@@ -453,7 +470,14 @@ const styles = StyleSheet.create({
     color: "#252c4a",
     fontSize: 14,
     textAlign: "center",
-    margin: 10
+    marginTop:7
+  },
+  forgot1: {    color: "#252c4a",
+    fontSize: 14,
+    textAlign:"center",
+    alignSelf:"flex-end",
+    marginTop:7,
+    marginRight:5,
   },
   line: {
     width: 100,
@@ -498,7 +522,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   separator: {
-    height: 2,
+    height: 4,
     backgroundColor: "#808080",
     width: "100%"
   }

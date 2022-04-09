@@ -27,7 +27,7 @@ const CommonToolbar = ({ navigation, toolbarTitle }) => {
         </TouchableOpacity>
         <Text style={styles.cart}>{toolbarTitle}</Text>
       </View>
-      <View style={styles.separator} />
+      {/* <View style={styles.separator} /> */}
     </View>
   );
 };
@@ -63,9 +63,10 @@ const styles = StyleSheet.create({
     height: 56,
     flexDirection: "row",
     width: "100%",
-    backgroundColor: "#252c4a",
+    backgroundColor: "#31679B",
     justifyContent: "center",
     alignItems: "center",
+    marginTop:5
   },
   separator: {
     height: 2,
